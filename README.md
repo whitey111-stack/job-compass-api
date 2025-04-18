@@ -1,73 +1,133 @@
-# Welcome to your Lovable project
 
-## Project info
+# Job Board API
 
-**URL**: https://lovable.dev/projects/e724cab6-0a71-4325-ba37-5dc972ca744a
+A RESTful API built with Laravel 10+ for a Job Board platform where Companies can post jobs and Candidates can apply.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+### Core Features
+- Separate authentication for Companies and Candidates using Laravel Passport
+- Job posting management for Companies (CRUD operations)
+- Public job listings with filtering capabilities
+- Job application system with file upload
+- Queue processing for resume uploads
+- Comprehensive API documentation via Postman collection
 
-**Use Lovable**
+### Bonus Features
+- Response caching for improved performance
+- Dashboard analytics for both Companies and Candidates
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e724cab6-0a71-4325-ba37-5dc972ca744a) and start prompting.
+## Technical Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- Laravel 10+
+- MySQL
+- Laravel Passport (OAuth2)
+- Laravel Queues
+- Laravel Cache
+- Composer
 
-**Use your preferred IDE**
+## Setup Instructions
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. **Clone the repository**
+```bash
+git clone [repository-url]
+cd job-board-api
 ```
 
-**Edit a file directly in GitHub**
+2. **Install Dependencies**
+```bash
+composer install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. **Environment Setup**
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-**Use GitHub Codespaces**
+4. **Configure Database**
+- Update `.env` with your database credentials
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+5. **Run Migrations**
+```bash
+php artisan migrate
+```
 
-## What technologies are used for this project?
+6. **Setup Passport**
+```bash
+php artisan passport:install
+```
 
-This project is built with:
+7. **Configure Queue Driver**
+- Update `.env` to set your preferred queue driver
+```bash
+QUEUE_CONNECTION=database
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+8. **Start Queue Worker**
+```bash
+php artisan queue:work
+```
 
-## How can I deploy this project?
+9. **Cache Configuration**
+```bash
+php artisan config:cache
+php artisan route:cache
+```
 
-Simply open [Lovable](https://lovable.dev/projects/e724cab6-0a71-4325-ba37-5dc972ca744a) and click on Share -> Publish.
+## Design Choices
 
-## Can I connect a custom domain to my Lovable project?
+1. **Separate Authentication**
+   - Companies and Candidates are kept as separate entities to maintain clear separation of concerns
+   - Enables different authentication flows and permissions for each user type
 
-Yes, you can!
+2. **Queue Implementation**
+   - File uploads are processed in the background to improve response times
+   - Prevents timeout issues with large files
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+3. **Caching Strategy**
+   - Public job listings are cached for 5 minutes
+   - Improves performance for frequently accessed endpoints
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+4. **Soft Deletes**
+   - Implemented for jobs to maintain data integrity
+   - Allows for potential recovery of deleted posts
+
+## Assumptions & Future Improvements
+
+### Assumptions
+- Companies and Candidates require email verification
+- One application per candidate per job posting
+- Resume files are limited to specific formats (PDF, DOC, DOCX)
+- Job postings require approval before publishing
+
+### Potential Improvements
+1. **Search Enhancement**
+   - Implement Elasticsearch for better full-text search
+   - Add more advanced filtering options
+
+2. **Performance Optimizations**
+   - Implement rate limiting for API endpoints
+   - Add request caching for other frequently accessed endpoints
+
+3. **Feature Additions**
+   - Job categories and tags
+   - Candidate profile with skills matrix
+   - Company verification system
+   - Email notifications for application status updates
+
+4. **Security Enhancements**
+   - Implement two-factor authentication
+   - Add API request signing for sensitive endpoints
+
+## API Documentation
+
+The complete API documentation is available in the included Postman collection. Import the collection file from the `docs` folder to view all available endpoints and their usage.
