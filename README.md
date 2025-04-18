@@ -1,4 +1,3 @@
-
 # Job Board API
 
 A RESTful API built with Laravel 10+ for a Job Board platform where Companies can post jobs and Candidates can apply.
